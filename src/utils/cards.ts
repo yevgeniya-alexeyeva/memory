@@ -5,77 +5,52 @@ import hedgehog from "../images/hedgehog.png";
 import rabbit from "../images/rabbit.png";
 import raccoon from "../images/raccoon.png";
 
-export const cardsData = [
+
+interface ICard {
+  animal: string;
+  imageSrc: string;
+  color: string;
+  order?: number;
+  id: string;
+}
+//#f7ef7b
+export const cardsData:ICard[] = [
   {
     animal: "bear",
     imageSrc: bear,
     color: "#7bf7cd",
-    order: 1,
-  },
-  {
-    animal: "bear",
-    imageSrc: bear,
-    color: "#f7ef7b",
-    order: 2,
+    id: '',
   },
   {
     animal: "owl",
     imageSrc: owl,
     color: "#7bf7cd",
-    order: 3,
-  },
-  {
-    animal: "owl",
-    imageSrc: owl,
-    color: "#f7ef7b",
-    order: 4,
+    id: '',
   },
   {
     animal: "elk",
     imageSrc: elk,
     color: "#7bf7cd",
-    order: 5,
+    id: '',
   },
-  {
-    animal: "elk",
-    imageSrc: elk,
-    color: "#f7ef7b",
-    order: 6,
-  },
+  
   {
     animal: "hedgehog",
     imageSrc: hedgehog,
     color: "#7bf7cd",
-    order: 7,
+    id: '',
   },
-  {
-    animal: "hedgehog",
-    imageSrc: hedgehog,
-    color: "#f7ef7b",
-    order: 8,
-  },
+ 
   {
     animal: "rabbit",
     imageSrc: rabbit,
     color: "#7bf7cd",
-    order: 9,
-  },
-  {
-    animal: "rabbit",
-    imageSrc: rabbit,
-    color: "#f7ef7b",
-    order: 10,
+    id: '',
   },
   {
     animal: "racoon",
     imageSrc: raccoon,
     color: "#7bf7cd",
-    order: 11,
-  },
-  {
-    animal: "racoon",
-    imageSrc: raccoon,
-    color: "#f7ef7b",
-    order: 12,
+    id: '',
   },
 ];
