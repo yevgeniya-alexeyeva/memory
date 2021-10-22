@@ -13,7 +13,7 @@ interface ICard {
   order?: number;
   id: string;
 }
-//#f7ef7b
+
 export const cardsData:ICard[] = [
   {
     animal: "bear",

@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { Card } from "../card/Card";
-import { cardsData } from "../../utils/cards";
 import styles from "./board.module.css";
 import shortid from "shortid";
 
 type TCard = HTMLLIElement | null;
+interface IProps {
+  orderedCards: {
+    animal: string;
+    imageSrc: string;
+    color: string;
+    order?: number | undefined;
+    id: string;
+  }[];
+  onWin: () => void;
+}
 
-const orderedCards = [...cardsData, ...cardsData].map((item) => {
-  item.order = Math.floor(Math.random() * 12);
-  item.id = shortid.generate();
-  return { ...item };
-});
-
-export const Board = () => {
+export const Board = ({ orderedCards, onWin }: IProps) => {
   const [hasFlippedCard, setFlippedCard] = useState(false);
   const [lockBoard, setLockBoard] = useState(false);
   const [firstCard, setFirstCard] = useState<TCard>(null);
@@ -21,7 +24,6 @@ export const Board = () => {
   const [clearedCards, setClearedCards] = useState<string[]>([]);
 
   const flipCard = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-    console.log("flip");
     if (lockBoard) return;
 
     if (e.currentTarget === firstCard) return;
@@ -46,7 +48,9 @@ export const Board = () => {
   };
 
   const checkForMatch = (item: HTMLLIElement) => {
-    let isMatch = firstCard?.dataset.animal === item.dataset.animal;
+    let isMatch =
+      firstCard?.dataset.animal === item.dataset.animal &&
+      firstCard?.style.color === item.style.color;
     isMatch ? disableCards(item?.id) : unflipCards();
   };
 
@@ -78,7 +82,7 @@ export const Board = () => {
   (function () {
     if (clearedCards.length === orderedCards.length) {
       console.log("win");
-      return;
+      onWin();
     }
   })();
 
