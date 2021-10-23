@@ -7,12 +7,14 @@ interface IProps {
   order?: number;
   flipClass: string;
   id: string;
-  onClick: (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void;
+  onCardClick:
+    | ((e: React.MouseEvent<HTMLLIElement, MouseEvent>) => void)
+    | undefined;
 }
 
 export const Card = ({
   animal,
-  onClick,
+  onCardClick,
   imgSrc,
   color,
   flipClass,
@@ -24,7 +26,7 @@ export const Card = ({
       className={`${styles.card} ${flipClass}`}
       id={id}
       data-animal={animal + color}
-      onClick={(e) => onClick(e)}
+      onClick={onCardClick}
       style={{ order: order }}
     >
       <img

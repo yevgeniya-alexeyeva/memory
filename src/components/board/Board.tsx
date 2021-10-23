@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "../card/Card";
 import styles from "./board.module.css";
 import shortid from "shortid";
@@ -12,10 +12,11 @@ interface IProps {
     order?: number | undefined;
     id: string;
   }[];
-  onWin: () => void;
+  levelHandler: () => void;
+  scoreHandler: () => void;
 }
 
-export const Board = ({ orderedCards, onWin }: IProps) => {
+export const Board = ({ orderedCards, levelHandler, scoreHandler }: IProps) => {
   const [hasFlippedCard, setFlippedCard] = useState(false);
   const [lockBoard, setLockBoard] = useState(false);
   const [firstCard, setFirstCard] = useState<TCard>(null);
@@ -51,25 +52,29 @@ export const Board = ({ orderedCards, onWin }: IProps) => {
     let isMatch =
       firstCard?.dataset.animal === item.dataset.animal &&
       firstCard?.style.color === item.style.color;
-    isMatch ? disableCards(item?.id) : unflipCards();
+    if (isMatch) {
+      scoreHandler();
+      disableCards();
+      setClearedCards((prev) => [...prev, ...openCards, item.id]);
+      resetBoard();
+    } else {
+      unflipCards();
+    }
   };
 
-  const disableCards = (item: string) => {
+  const disableCards = () => {
     if (firstCard) {
       firstCard.style.pointerEvents = "none";
     }
     if (secondCard) {
       secondCard.style.pointerEvents = "none";
     }
-    setClearedCards((prev) => [...prev, ...openCards, item]);
-
-    resetBoard();
   };
 
   const unflipCards = () => {
     setTimeout(() => {
       resetBoard();
-    }, 1500);
+    }, 1000);
   };
 
   const resetBoard = () => {
@@ -79,25 +84,50 @@ export const Board = ({ orderedCards, onWin }: IProps) => {
     setSecondCard(null);
     setOpenCards([]);
   };
-  (function () {
-    if (clearedCards.length === orderedCards.length) {
-      console.log("win");
-      onWin();
+
+  let boardStyle;
+  switch (orderedCards.length) {
+    case 24:
+      boardStyle = styles.boardS;
+      break;
+    case 36:
+      boardStyle = styles.boardM;
+      break;
+    case 48:
+      boardStyle = styles.boardL;
+      break;
+    case 60:
+      boardStyle = styles.boardXL;
+      break;
+    default:
+      boardStyle = styles.boardXS;
+  }
+
+  useEffect(() => {
+    if (clearedCards.length === orderedCards.length && orderedCards.length) {
+      console.log(
+        "🚀 ~ file: Board.tsx ~ line 108 ~ useEffect ~ clearedCards.length",
+        clearedCards.length
+      );
+
+      levelHandler();
+      setClearedCards([]);
     }
-  })();
+  }, [orderedCards.length, clearedCards.length, levelHandler]);
 
   return (
-    <ul className={styles.board}>
+    <ul className={boardStyle}>
       {orderedCards.map((item) => {
         let flip =
           openCards.includes(item.id) || clearedCards.includes(item.id)
             ? styles.flip
             : "";
+        let onClick = clearedCards.includes(item.id) ? undefined : flipCard;
         return (
           <Card
             key={shortid.generate()}
             id={item.id}
-            onClick={flipCard}
+            onCardClick={onClick}
             flipClass={flip}
             animal={item.animal}
             imgSrc={item.imageSrc}

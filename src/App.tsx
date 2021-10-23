@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Board } from "./components/board/Board";
+import { Header } from "./components/header/Header";
 import { cardsData } from "./utils/cards";
 import shortid from "shortid";
 
@@ -13,12 +14,19 @@ type TCards = {
 }[];
 
 function App() {
-  const [level, setLevel] = useState(2);
+  const [level, setLevel] = useState(1);
   const [orderedCards, setOrderedCards] = useState<TCards>([]);
+  const [score, setScore] = useState(0);
+  const [isAuth, setIsAuth] = useState(false);
 
-  const onWin = () => {
-    setLevel((prev) => prev++);
+  const levelHandler = () => {
+    setLevel((prev) => (prev += 1));
+    console.log("levelHandler", level);
   };
+  const scoreHandler = () => {
+    setScore((prev) => (prev += 1));
+  };
+
   useEffect(() => {
     const getCardsSet = () => {
       let cards: TCards = [];
@@ -41,9 +49,22 @@ function App() {
     setOrderedCards(getCardsSet());
   }, [setOrderedCards, level]);
 
+  const authHandler = () => {
+    console.log("🚀 ~ file: App.tsx ~ line 47 ~ authHandler ~ authHandler");
+  };
   return (
     <div className="App">
-      <Board orderedCards={orderedCards} onWin={onWin} />
+      <Header
+        level={level}
+        score={score}
+        btnContent={isAuth ? "Logout" : "Login"}
+        onClick={authHandler}
+      />
+      <Board
+        orderedCards={orderedCards}
+        levelHandler={levelHandler}
+        scoreHandler={scoreHandler}
+      />
     </div>
   );
 }
